@@ -1,10 +1,22 @@
 import { Button, TextField } from "@mui/material";
 import { Box } from "@mui/system";
+import { useRouter } from "next/router";
 import React from "react";
 
 function OtpCodeInput() {
+  const router = useRouter();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      otpCode: data.get("code"),
+    });
+    router.push("/");
+  };
+
   return (
-    <Box>
+    <Box component="form" onSubmit={handleSubmit}>
       <TextField
         sx={{
           ".MuiInputBase-input": {
@@ -12,6 +24,10 @@ function OtpCodeInput() {
             letterSpacing: "1rem",
           },
         }}
+        inputProps={{
+          maxLength: 5,
+        }}
+        autoFocus={true}
         margin="normal"
         required
         fullWidth
