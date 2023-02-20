@@ -1,31 +1,49 @@
-import { Box, Drawer, IconButton, Typography } from "@mui/material";
+import { Box, Drawer, Icon, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import { GeneralContext } from "@/contexts/generalContext";
+import { texts } from "@/texts";
+import SidebarItem from "./SidebarItem";
+import { SIDEBAR_ITEMS } from "@/constants/sidebarIcons";
 
 function SideBar() {
   const { isSidebarOpen, setIsSidebarOpen } = React.useContext(GeneralContext);
+
+  const [itemIndex, setItemIndex] = useState(null);
+
+  const list = () => {
+    return SIDEBAR_ITEMS.map((item, i) => (
+      <SidebarItem
+        setItemIndex={setItemIndex}
+        itemIndex={itemIndex}
+        index={i}
+        value={item}
+      />
+    ));
+  };
 
   return (
     <Box sx={{ display: "flex", direction: "ltr" }}>
       <Drawer
         sx={(theme) => ({
-          width: open ? "260px" : "92px",
+          width: isSidebarOpen ? "280px" : "92px",
           whiteSpace: "nowrap",
-          transition: "all 0.2s ease-in-out",
+          transition: "225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
           "& .MuiPaper-root": {
-            width: open ? "260px" : "92px",
+            width: isSidebarOpen ? "280px" : "92px",
             padding: "12px",
-            transition: "all 0.2s ease-in-out",
+            transition: "225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
             overflowX: "hidden",
             background: theme.palette.info.dark,
+            border: "none",
           },
         })}
         anchor="left"
         variant="permanent"
-        open={open}
+        open={isSidebarOpen}
       >
         <Box
-          onClick={() => setOpen(!open)}
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           sx={(theme) => ({
             display: "flex",
             alignItems: "center",
@@ -33,7 +51,7 @@ function SideBar() {
             borderRadius: theme?.shape?.borderRadius * 100,
             color: "blue",
             justifyContent: "space-between",
-            width: open ? "100%" : "40px",
+            width: isSidebarOpen ? "100%" : "40px",
             transition: "width 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
             cursor: "pointer",
             direction: "rtl",
@@ -42,8 +60,8 @@ function SideBar() {
         >
           <IconButton
             sx={{
-              transform: open ? "rotateY(180deg)" : "rotateY(0deg)",
-              transition: "transform 500ms linear",
+              transform: isSidebarOpen ? "rotateY(180deg)" : "rotateY(0deg)",
+              transition: "transform 250ms linear",
               transformStyle: "preserve-3d",
             }}
           >
@@ -52,7 +70,9 @@ function SideBar() {
           <Typography
             sx={(theme) => ({
               transition: "225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
-              transform: open ? "translateX(0px)" : "translateX(-100px)",
+              transform: isSidebarOpen
+                ? "translateX(0px)"
+                : "translateX(-100px)",
               overflow: "hidden",
               marginLeft: theme.spacing(2),
             })}
@@ -61,7 +81,7 @@ function SideBar() {
             asdfsfda
           </Typography>
         </Box>
-        {/* {list} */}
+        {list()}
       </Drawer>
     </Box>
   );
