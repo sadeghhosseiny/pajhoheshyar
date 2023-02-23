@@ -1,7 +1,6 @@
 import React from "react";
 import MainLayout from "@/components/mainLayout";
-import GeneralContextProvider from "@/contexts/generalContext";
-import GeneralContext from "@/contexts/generalContext";
+import GeneralContextProvider from "@/providers/generalContext";
 import { Typography } from "@mui/material";
 import Head from "next/head";
 
@@ -14,16 +13,14 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <GeneralContextProvider>
-        <MainLayout>
-          <Typography component="h1" color="primary">
-            Material UI v5 with Next.js in TypeScript
-          </Typography>
-          <Typography component="h2" color="secondary">
-            Boilerplate for building faster.
-          </Typography>{" "}
-        </MainLayout>
-      </GeneralContextProvider>
+      <MainLayout>
+        <Typography component="h1" color="primary">
+          Material UI v5 with Next.js in TypeScript
+        </Typography>
+        <Typography component="h2" color="secondary">
+          Boilerplate for building faster.
+        </Typography>{" "}
+      </MainLayout>
     </>
   );
 }

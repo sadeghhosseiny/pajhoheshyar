@@ -11,6 +11,7 @@ function MainLayout({ children }) {
       <Grid
         container
         spacing={0}
+        flexDirection="row-reverse"
         sx={{
           flexWrap: "nowrap",
           pt: (theme) => theme.spacing(0), //change theme.spacing from 6 to 0
@@ -33,6 +34,7 @@ function MainLayout({ children }) {
             }),
           }}
         >
+          {children}
           {/* <Box sx={{ mb: 3 }}>
             <Outlet />
           </Box> */}
