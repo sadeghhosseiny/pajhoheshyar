@@ -8,6 +8,8 @@ import { CacheProvider } from "@emotion/react";
 import theme from "../theme";
 import createCache from "@emotion/cache";
 import "../styles/globals.css";
+import GeneralContextProvider from "@/providers/generalContext";
+import { NotistackProvider } from "@/providers/noti";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 
@@ -27,7 +29,11 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        <NotistackProvider>
+          <GeneralContextProvider>
+            <Component {...pageProps} />
+          </GeneralContextProvider>
+        </NotistackProvider>
       </ThemeProvider>
     </CacheProvider>
   );

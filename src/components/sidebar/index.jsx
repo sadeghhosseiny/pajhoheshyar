@@ -1,10 +1,17 @@
-import { Box, Drawer, Icon, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Drawer,
+  Icon,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import { GeneralContext } from "@/contexts/generalContext";
 import { texts } from "@/texts";
 import SidebarItem from "./SidebarItem";
 import { SIDEBAR_ITEMS } from "@/constants/sidebarIcons";
+import { GeneralContext } from "@/providers/generalContext";
 
 function SideBar() {
   const { isSidebarOpen, setIsSidebarOpen } = React.useContext(GeneralContext);
