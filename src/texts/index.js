@@ -9,5 +9,6 @@ export const texts = {
     sendRefereesNames: "ارسال اسامی داوران",
     viewCommentsOfSupervisor: "مشاهده نظرات استاد راهنما",
   },
+  pajhooheshyarPanel: "پنل پژوهشیار",
   logout: "خروج",
 };

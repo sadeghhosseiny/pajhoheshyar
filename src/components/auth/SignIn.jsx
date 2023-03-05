@@ -7,16 +7,21 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import OtpCodeInput from "./OtpCodeInput";
+import { auth } from "@/services/auth";
 
 export default function SignIn() {
   const [isClicked, setIsClicked] = useState(false);
+  const [phone, setPhone] = useState(null);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      phoneNumber: data.get("phone-number"),
-    });
+    const formData = new FormData(event.currentTarget);
+    let phoneNumber = formData.get("phone-number");
+    setPhone(phoneNumber);
+    let data = {
+      phone_number: phoneNumber,
+    };
+    auth(data);
     setIsClicked(true);
   };
 
@@ -37,7 +42,7 @@ export default function SignIn() {
           ورود |‌ ثبت نام
         </Typography>
         {isClicked ? (
-          <OtpCodeInput />
+          <OtpCodeInput phone={phone} />
         ) : (
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField

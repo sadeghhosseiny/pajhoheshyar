@@ -11,33 +11,47 @@ export const SIDEBAR_ITEMS = [
   {
     icon: <BorderColorIcon />,
     title: "اصلاح پایان نامه",
+    role: "student",
+    link: "/edit-thesis",
   },
   {
     icon: <SendIcon />,
     title: "ارسال پایان نامه",
+    role: "student",
+    link: "/",
   },
   {
     icon: <PreviewIcon />,
     title: "مشاهده لیست پایان نامه ها",
+    role: "teacher",
+    link: "/thesis-statuses",
   },
-  {
-    icon: <RemoveRedEyeIcon />,
-    title: "مشاهده وضعیت پایان نامه ها",
-  },
+  // {
+  //   icon: <RemoveRedEyeIcon />,
+  //   title: "مشاهده وضعیت پایان نامه ها",
+  //   link: "thesis-statuses"
+  // },
   {
     icon: <MessageIcon />,
     title: "ارسال پیام",
+    role: "both",
+    link: "/send-message",
   },
   {
     icon: <InboxIcon />,
     title: "صندوق ورودی",
+    role: "both",
+    link: "/inbox",
   },
-  {
-    icon: <IosShareIcon />,
-    title: "ارسال اسامی داوران",
-  },
-  {
-    icon: <ForumIcon />,
-    title: "مشاهده نظرات استاد راهنما",
-  },
+  // {
+  //   icon: <IosShareIcon />,
+  //   title: "ارسال اسامی داوران",
+  //   link: "/send-referees-names",
+  // },
+  // {
+  //   icon: <ForumIcon />,
+  //   title: "مشاهده نظرات استاد راهنما",
+  //   role: "student",
+  //   link: "/teacher-comments",
+  // },
 ];

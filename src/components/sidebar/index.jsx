@@ -1,32 +1,44 @@
-import {
-  Box,
-  Drawer,
-  Icon,
-  IconButton,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Drawer, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { texts } from "@/texts";
 import SidebarItem from "./SidebarItem";
 import { SIDEBAR_ITEMS } from "@/constants/sidebarIcons";
 import { GeneralContext } from "@/providers/generalContext";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { parseJwt } from "@/services/api";
 
 function SideBar() {
   const { isSidebarOpen, setIsSidebarOpen } = React.useContext(GeneralContext);
 
-  const [itemIndex, setItemIndex] = useState(null);
+  const [userData, setUserData] = useState("");
+
+  const router = useRouter();
+  const pathName = router.pathname;
+
+  useEffect(() => {
+    let usrToken = parseJwt(localStorage.getItem("cook"));
+    setUserData(usrToken);
+  }, []);
 
   const list = () => {
-    return SIDEBAR_ITEMS.map((item, i) => (
-      <SidebarItem
-        setItemIndex={setItemIndex}
-        itemIndex={itemIndex}
-        index={i}
-        value={item}
-      />
-    ));
+    return SIDEBAR_ITEMS.map(
+      (item, i) =>
+        (userData?.role === item.role || item.role === "both") && (
+          <SidebarItem
+            key={i}
+            active={item.link === pathName}
+            index={i}
+            value={item}
+          />
+        )
+    );
+  };
+
+  const logOut = () => {
+    localStorage.removeItem("cook");
+    router.push("/auth");
   };
 
   return (
@@ -62,7 +74,7 @@ function SideBar() {
             transition: "width 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms",
             cursor: "pointer",
             direction: "rtl",
-            margin: "0 auto 0 auto",
+            margin: "0 auto 32px auto",
           })}
         >
           <IconButton
@@ -84,11 +96,18 @@ function SideBar() {
               marginLeft: theme.spacing(2),
             })}
           >
-            {/* {texts.static.texts.managementPanel} */}
-            asdfsfda
+            {texts.pajhooheshyarPanel}
           </Typography>
         </Box>
         {list()}
+        <Button
+          variant="contained"
+          color="error"
+          sx={{ marginTop: "auto", marginBottom: "24px" }}
+          onClick={logOut}
+        >
+          خروج
+        </Button>
       </Drawer>
     </Box>
   );

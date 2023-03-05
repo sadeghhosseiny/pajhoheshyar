@@ -1,17 +1,20 @@
+import { verificationCode } from "@/services/auth";
 import { Button, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import React from "react";
 
-function OtpCodeInput() {
+function OtpCodeInput({ phone }) {
   const router = useRouter();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      otpCode: data.get("code"),
-    });
+    const formData = new FormData(event.currentTarget);
+    let data = {
+      code: formData.get("code"),
+      phone_number: phone,
+    };
+    verificationCode(data);
     router.push("/");
   };
 
@@ -25,7 +28,7 @@ function OtpCodeInput() {
           },
         }}
         inputProps={{
-          maxLength: 5,
+          maxLength: 6,
         }}
         autoFocus={true}
         margin="normal"

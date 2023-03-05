@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Icon, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { GeneralContext } from "@/providers/generalContext";
+import { useRouter } from "next/router";
 
-function SidebarItem({ setItemIndex, itemIndex, index, value }) {
-  const { isSidebarOpen, setIsSidebarOpen } = React.useContext(GeneralContext);
+function SidebarItem({ active, index, value }) {
+  const { isSidebarOpen } = React.useContext(GeneralContext);
+
+  const router = useRouter();
 
   return (
     <Tooltip
@@ -39,12 +42,12 @@ function SidebarItem({ setItemIndex, itemIndex, index, value }) {
             borderRadius: "25px 0 0 25px",
             transition: "all 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms, width 0ms",
           },
-          itemIndex === index && {
+          active && {
             background: "white",
             color: "#01579b",
             transition: "all 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms, width 0ms",
           },
-          itemIndex === index
+          active
             ? {
                 "&::after": {
                   right: isSidebarOpen ? "11px" : "21px",
@@ -106,7 +109,7 @@ function SidebarItem({ setItemIndex, itemIndex, index, value }) {
                 },
               },
         ]}
-        onClick={() => setItemIndex(index)}
+        onClick={() => router.push(value.link)}
         display="flex"
         alignItems="center"
       >

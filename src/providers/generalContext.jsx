@@ -5,7 +5,7 @@ export const initialValue = {
 };
 
 const GeneralContextProvider = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
     <GeneralContext.Provider

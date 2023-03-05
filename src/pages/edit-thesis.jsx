@@ -1,9 +1,19 @@
 import MainLayout from "@/components/mainLayout";
-import { Button, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useSnackbar } from "notistack";
 import React, { useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { useEffect } from "react";
+import { getRefereeApi, sendThesisApi } from "@/services/requests";
+import { parseJwt } from "@/services/api";
 
 const MAX_UPLOAD_SIZE = 5 * 1024 * 1024; /* 5Mb */
 
@@ -11,7 +21,28 @@ const FILE_NAME = "file";
 
 function EditThesis() {
   const [file, setFile] = useState(null);
+  const [referees, setReferees] = useState([]);
+
+  const [userData, setUserData] = useState([]);
+
   const { enqueueSnackbar } = useSnackbar();
+
+  const [refr, setRefr] = useState("");
+
+  const handleChange = (event) => {
+    setRefr(event.target.value);
+  };
+
+  const gatReferees = async () => {
+    let data = await getRefereeApi();
+    setReferees(data.results);
+  };
+
+  useEffect(() => {
+    let usrToken = parseJwt(localStorage.getItem("cook"));
+    setUserData(usrToken);
+    gatReferees();
+  }, []);
 
   const onUploadThesis = (e) => {
     if (e.target.files[0].size > MAX_UPLOAD_SIZE) {
@@ -40,12 +71,32 @@ function EditThesis() {
 
   let fileName = file?.file?.name;
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    let title = formData.get("title");
+    let description = formData.get("description");
+    let data = {
+      refree: refr,
+      title: title,
+      description: description,
+      student: userData?.user_id,
+    };
+    console.log("usrDATA ", userData);
+    sendThesisApi(data);
+  };
+
   return (
     <MainLayout>
-      <Stack gap="64px" sx={{ direction: "ltr" }}>
+      <Stack
+        component="form"
+        onSubmit={handleSubmit}
+        gap="64px"
+        sx={{ direction: "ltr" }}
+      >
         <Box margin="auto" justifyContent="center" display="flex" gap="24px">
           <Typography alignSelf="center">عنوان</Typography>
-          <TextField variant="outlined" label="" />
+          <TextField id="title" name="title" variant="outlined" label="" />
         </Box>
         <Box
           width="50%"
@@ -55,9 +106,42 @@ function EditThesis() {
           gap="24px"
         >
           <Typography alignSelf="center">توضیحات</Typography>
-          <TextField multiline fullWidth rows={8} variant="outlined" label="" />
+          <TextField
+            id="description"
+            name="description"
+            multiline
+            fullWidth
+            rows={8}
+            variant="outlined"
+            label=""
+          />
         </Box>
-        <Box marginLeft={"50px"} width="100%">
+        <Box
+          width="50%"
+          margin="auto"
+          justifyContent="center"
+          display="flex"
+          gap="24px"
+        >
+          <InputLabel id="demo-simple-select-label">داور</InputLabel>
+          <Select
+            sx={{
+              width: "50%",
+            }}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={refr}
+            label=""
+            onChange={handleChange}
+          >
+            {referees.map((item) => (
+              <MenuItem value={item?.ssn}>
+                {item?.first_name + item?.last_name}
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+        {/* <Box marginLeft={"50px"} width="100%">
           {!file ? (
             <>
               <Button
@@ -116,9 +200,9 @@ function EditThesis() {
               </Box>
             </Box>
           )}
-        </Box>
+        </Box> */}
         <Box>
-          <Button sx={{ width: "15%" }} disabled variant="contained">
+          <Button type="submit" sx={{ width: "15%" }} variant="contained">
             ارسال
           </Button>
         </Box>

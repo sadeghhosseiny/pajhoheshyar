@@ -1,27 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "@/components/mainLayout";
 import {
+  Checkbox,
   Paper,
   Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
   Typography,
 } from "@mui/material";
+import { getThesisApi } from "@/services/requests";
+import { parseJwt } from "@/services/api";
 
 function ThesisStatuses() {
   const studentStatuses = ["عدم تایید", "تایید", "استاد"];
-  const teacherStatuses = [
-    "موضوع",
-    "تاریخ آپلود",
-    "تایید",
-    "عدم تایید",
-    "دانشجو",
-  ];
+  const teacherStatuses = ["تاریخ آپلود", "موضوع", "دانشجو", "وضعیت"];
+
+  const [thesis, setThesis] = useState([]);
+  const [userData, setUserData] = useState([]);
+
+  const getThesisData = async () => {
+    let data = await getThesisApi();
+    // console.log("data", data);
+    setThesis(data.results);
+  };
+
+  useEffect(() => {
+    let usrToken = parseJwt(localStorage.getItem("cook"));
+    setUserData(usrToken);
+    getThesisData();
+  }, []);
 
   return (
     <MainLayout>
+      {console.log("tttt", thesis)}
       <TableContainer
         component={Paper}
         sx={{
@@ -30,15 +44,6 @@ function ThesisStatuses() {
           overflowY: "auto",
           border: "1px solid #00baba",
         }}
-        // onScroll={(e) => {
-        //   if (
-        //     Math.ceil(e?.target?.scrollTop) + e?.target?.clientHeight + 1 >=
-        //       e?.target?.scrollHeight &&
-        //     !isLoading
-        //   ) {
-        //     setPage((prev) => ++prev);
-        //   }
-        // }}
       >
         <Table stickyHeader>
           <TableHead>
@@ -50,71 +55,51 @@ function ThesisStatuses() {
               ))}
             </TableRow>
           </TableHead>
-          {/* <TableBody>
-        {peopleInfo.map((item) => {
-          const isChecked = servicedPeople.some(
-            (servicedPerson) => servicedPerson.id === item.id
-          );
-          return (
-            <TableRow key={item.id}>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={isChecked}
-                  onClick={() =>
-                    toggleRelated(
-                      item,
-                      isChecked
-                        ? RELATED_TOGGLE_MODES.DELETE
-                        : RELATED_TOGGLE_MODES.ADD
-                    )
-                  }
-                  color="primary"
-                />
-              </TableCell>
-              <TableCell>
-                <Typography variant={"body_m"}>
-                  {item.firstname} {item.lastname}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant={"body_m"}>
-                  {texts.static.relations[item.relation] || "_"}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant={"body_m"}>
-                  {item.phonenumber || "_"}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant={"body_m"}>
-                  {getShortJalaliDate(item.birthdate)}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant={"body_m"}>
-                  {item.national_code}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant={"body_m"}>
-                  {item.insurance_name || "_"}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant={"body_m"}>
-                  {item.supplemental_insurance_name || "_"}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant={"body_m"}>
-                  {texts.static.genders[item.gender]}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody> */}
+          <TableBody>
+            {thesis?.map((item) => {
+              // const isChecked = servicedPeople.some(
+              //   (servicedPerson) => servicedPerson.id === item.id
+              // );
+              return (
+                <TableRow key={item.id}>
+                  <TableCell>
+                    <Typography variant={"body_m"}>
+                      {item.created_at}
+                    </Typography>
+                    {/* <Checkbox
+                      // checked={isChecked}
+                      // onClick={() =>
+                      //   toggleRelated(
+                      //     item,
+                      //     isChecked
+                      //       ? RELATED_TOGGLE_MODES.DELETE
+                      //       : RELATED_TOGGLE_MODES.ADD
+                      //   )
+                      // }
+                      color="primary"
+                    /> */}
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant={"body_m"}>{item?.title}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant={"body_m"}>
+                      {userData?.first_name + " " + userData?.last_name}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant={"body_m"}>
+                      {item?.status === "REJ"
+                        ? "تایید نشده"
+                        : item.status === "ACC"
+                        ? "تایید شده"
+                        : "در حال بررسی"}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
         </Table>
       </TableContainer>
     </MainLayout>
