@@ -134,7 +134,7 @@ function EditThesis() {
             label=""
             onChange={handleChange}
           >
-            {referees.map((item) => (
+            {referees?.map((item) => (
               <MenuItem value={item?.ssn}>
                 {item?.first_name + item?.last_name}
               </MenuItem>

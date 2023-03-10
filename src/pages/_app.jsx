@@ -10,6 +10,7 @@ import createCache from "@emotion/cache";
 import "../styles/globals.css";
 import GeneralContextProvider from "@/providers/generalContext";
 import { NotistackProvider } from "@/providers/noti";
+import AuthProvider from "@/components/auth/authProvider";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 
@@ -31,7 +32,9 @@ export default function MyApp(props) {
         <CssBaseline />
         <NotistackProvider>
           <GeneralContextProvider>
+            <AuthProvider>
             <Component {...pageProps} />
+            </AuthProvider>
           </GeneralContextProvider>
         </NotistackProvider>
       </ThemeProvider>

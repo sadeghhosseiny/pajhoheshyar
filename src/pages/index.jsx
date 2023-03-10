@@ -14,6 +14,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useEffect } from "react";
 import { getRefereeApi, sendThesisApi } from "@/services/requests";
 import { parseJwt } from "@/services/api";
+import AuthProvider from "@/components/auth/authProvider";
 
 const MAX_UPLOAD_SIZE = 5 * 1024 * 1024; /* 5Mb */
 
@@ -34,8 +35,12 @@ function SendThesis() {
   };
 
   const gatReferees = async () => {
-    let data = await getRefereeApi();
-    setReferees(data.results);
+    try {
+      let data = await getRefereeApi();
+      setReferees(data.results);
+    } catch(e) {
+      console.log("errrrr", e)
+    }
   };
 
   useEffect(() => {
@@ -135,7 +140,7 @@ function SendThesis() {
             label=""
             onChange={handleChange}
           >
-            {referees.map((item, i) => (
+            {referees?.map((item, i) => (
               <MenuItem key={i} value={item?.ssn}>
                 {item?.first_name + item?.last_name}
               </MenuItem>
@@ -209,6 +214,7 @@ function SendThesis() {
         </Box>
       </Stack>
     </MainLayout>
+
   );
 }
 

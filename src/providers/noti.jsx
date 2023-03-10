@@ -5,7 +5,7 @@ export const NotistackProvider = ({ children }) => {
     <SnackbarProvider
       preventDuplicate={false}
       maxSnack={3}
-      autoHideDuration={5000}
+      autoHideDuration={3000}
       anchorOrigin={{
         vertical: "top",
         horizontal: "right",
