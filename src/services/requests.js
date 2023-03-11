@@ -14,7 +14,7 @@ export const getMessagesApi = () => {
 
 export const getRefereeApi = () => {
   return request({
-    url: "/refree/",
+    url: "/teacher/",
   });
 };
 
@@ -31,5 +31,19 @@ export const sendMessageApi = (data) => {
     url: "/message/",
     method: "POST",
     data: JSON.stringify(data),
+  });
+};
+
+export const editThesis = (data, id) => {
+  return request({
+    url: `/thesis/${id}/`,
+    method: "PATCH",
+    data: JSON.stringify(data),
+  });
+};
+
+export const getUserApi = () => {
+  return request({
+    url: `/user/`,
   });
 };

@@ -6,17 +6,16 @@ export const auth = async (data) => {
     method: "POST",
     data: JSON.stringify(data),
   });
-  console.log("TOK", res);
-  // localStorage.setItem("cook", token.token);
-  return res
+  res?.token && localStorage.setItem("cook", res.token);
+  return res;
 };
 
-export const verificationCode = async (data) => {
-  let token = await request({
+export const login = async (data) => {
+  let res = await request({
     url: "/auth/login/",
     method: "POST",
     data: JSON.stringify(data),
   });
-  localStorage.setItem("cook", token.token);
-  return token?.token
+  res?.token && localStorage.setItem("cook", res.token);
+  return res;
 };

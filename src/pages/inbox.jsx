@@ -1,4 +1,5 @@
 import MainLayout from "@/components/mainLayout";
+import { parseJwt } from "@/services/api";
 import { getMessagesApi } from "@/services/requests";
 import {
   Paper,
@@ -16,6 +17,8 @@ import { useEffect } from "react";
 function Inbox() {
   const inboxTable = ["تاریخ ارسال", "متن پیام", "فرستنده"];
 
+  const [userData, setUserData] = useState([]);
+
   const [messages, setMessages] = useState([]);
 
   const getMeesages = async () => {
@@ -23,12 +26,29 @@ function Inbox() {
     setMessages(data?.results);
   };
 
+  const formatDate = (date) => {
+    let d = new Date(date);
+    return d.toLocaleDateString("fa-ir");
+  };
+
   useEffect(() => {
+    let usrToken = parseJwt(localStorage.getItem("cook"));
+    setUserData(usrToken);
     getMeesages();
   }, []);
 
   return (
     <MainLayout>
+      <Typography
+        textAlign="end"
+        fontWeight="bold"
+        marginBottom="24px"
+        component="h1"
+        borderBottom="1px solid #c7bfbf"
+        padding="12px"
+      >
+        صندوق ورودی
+      </Typography>
       <TableContainer
         component={Paper}
         sx={{
@@ -49,13 +69,13 @@ function Inbox() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {console.log("data", messages)}
+            {console.log("messages", messages)}
             {messages?.map((item) => {
               return (
                 <TableRow key={item.id}>
                   <TableCell>
                     <Typography variant={"body_m"}>
-                      {item?.created_at || ""}
+                      {formatDate(item?.created_at)}
                     </Typography>
                   </TableCell>
                   <TableCell>

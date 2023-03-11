@@ -1,6 +1,7 @@
 import MainLayout from "@/components/mainLayout";
 import {
   Button,
+  FormControl,
   InputLabel,
   MenuItem,
   Select,
@@ -29,17 +30,22 @@ function SendThesis() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [refr, setRefr] = useState("");
+  const [teacher, setTeacher] = useState("");
 
-  const handleChange = (event) => {
+  const handleChangeRefree = (event) => {
     setRefr(event.target.value);
+  };
+
+  const handleChangeTeacher = (event) => {
+    setTeacher(event.target.value);
   };
 
   const gatReferees = async () => {
     try {
       let data = await getRefereeApi();
       setReferees(data.results);
-    } catch(e) {
-      console.log("errrrr", e)
+    } catch (e) {
+      console.log("errrrr", e);
     }
   };
 
@@ -76,76 +82,132 @@ function SendThesis() {
 
   let fileName = file?.file?.name;
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     let title = formData.get("title");
     let description = formData.get("description");
     let data = {
+      teacher: teacher,
       refree: refr,
       title: title,
       description: description,
       student: userData?.user_id,
     };
-    console.log("usrDATA ", userData);
-    sendThesisApi(data);
+
+    let res = await sendThesisApi(data);
+    res?.id &&
+      enqueueSnackbar("پایان نامه با موفقیت ارسال شد", {
+        variant: "success",
+      });
+  };
+
+  const validity = (e) => {
+    e.target.setCustomValidity("لطفا این فرم را پر کنید");
   };
 
   return (
     <MainLayout>
-      {console.log("qrqeqewreqw", userData)}
+      <Typography
+        textAlign="end"
+        fontWeight="bold"
+        marginBottom="24px"
+        component="h1"
+        borderBottom="1px solid #c7bfbf"
+        padding="12px"
+      >
+        ارسال پایان نامه
+      </Typography>
       <Stack
         component="form"
         onSubmit={handleSubmit}
         gap="64px"
         sx={{ direction: "ltr" }}
       >
-        <Box margin="auto" justifyContent="center" display="flex" gap="24px">
-          <Typography alignSelf="center">عنوان</Typography>
-          <TextField id="title" name="title" variant="outlined" label="" />
+        <Box gap="24px">
+          <Typography marginBottom="12px" alignSelf="center">
+            عنوان *
+          </Typography>
+          <TextField
+            required
+            placeholder="عنوان"
+            id="title"
+            name="title"
+            variant="outlined"
+            label=""
+          />
         </Box>
-        <Box
-          width="50%"
-          margin="auto"
-          justifyContent="center"
-          display="flex"
-          gap="24px"
-        >
-          <Typography alignSelf="center">توضیحات</Typography>
+        <Box width="50%" alignItems={"center"} gap="24px">
+          <Typography
+            sx={{
+              marginBottom: "12px",
+            }}
+          >
+            استاد *
+          </Typography>
+          <FormControl fullWidth>
+            <InputLabel>استاد</InputLabel>
+            <Select
+              margin="10px"
+              sx={{
+                width: "50%",
+              }}
+              required
+              value={teacher}
+              label="استاد"
+              onChange={handleChangeTeacher}
+            >
+              {referees?.map((item, i) => (
+                <MenuItem key={i} value={item?.ssn}>
+                  {item?.first_name + item?.last_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Box width="50%" alignItems={"center"} gap="24px">
+          <Typography
+            sx={{
+              marginBottom: "12px",
+            }}
+          >
+            داور *
+          </Typography>
+          <FormControl fullWidth>
+            <InputLabel>داور</InputLabel>
+            <Select
+              margin="10px"
+              sx={{
+                width: "50%",
+              }}
+              required
+              value={refr}
+              label="داور"
+              onChange={handleChangeRefree}
+            >
+              {referees?.map((item, i) => (
+                <MenuItem key={i} value={item?.ssn}>
+                  {item?.first_name + item?.last_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Box width="50%" gap="24px">
+          <Typography marginBottom="12px" alignSelf="center">
+            توضیحات *
+          </Typography>
           <TextField
             id="description"
             name="description"
+            required
+            placeholder="توضیحات"
             multiline
             fullWidth
             rows={8}
             variant="outlined"
             label=""
           />
-        </Box>
-        <Box
-          width="50%"
-          margin="auto"
-          justifyContent="center"
-          display="flex"
-          gap="24px"
-        >
-          <InputLabel id="demo-simple-select-label">داور</InputLabel>
-          <Select
-            sx={{
-              width: "50%",
-            }}
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={refr}
-            label=""
-            onChange={handleChange}
-          >
-            {referees?.map((item, i) => (
-              <MenuItem key={i} value={item?.ssn}>
-                {item?.first_name + item?.last_name}
-              </MenuItem>
-            ))}
-          </Select>
         </Box>
         {/* <Box marginLeft={"50px"} width="100%">
           {!file ? (
@@ -214,7 +276,6 @@ function SendThesis() {
         </Box>
       </Stack>
     </MainLayout>
-
   );
 }
 

@@ -10,9 +10,9 @@ import ForumIcon from "@mui/icons-material/Forum";
 export const SIDEBAR_ITEMS = [
   {
     icon: <BorderColorIcon />,
-    title: "اصلاح پایان نامه",
+    title: "لیست پایان نامه ها",
     role: "student",
-    link: "/edit-thesis",
+    link: "/list-thesis",
   },
   {
     icon: <SendIcon />,

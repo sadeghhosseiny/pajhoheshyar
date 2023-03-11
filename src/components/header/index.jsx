@@ -13,12 +13,21 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { GeneralContext } from "@/providers/generalContext";
+import { parseJwt } from "@/services/api";
 
 const Header = () => {
   const { isSidebarOpen, setIsSidebarOpen } = React.useContext(GeneralContext);
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const [userData, setUserData] = React.useState([]);
+
+  React.useEffect(() => {
+    let usrToken = parseJwt(localStorage.getItem("cook"));
+    console.log("TOKEN JWT PARSE", usrToken);
+    setUserData(usrToken);
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -94,11 +103,7 @@ const Header = () => {
               { flexGrow: 0, transition: "0.3s ease-in-out" },
             ]}
           >
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ pr: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
+            {userData?.first_name} {userData?.last_name}
           </Box>
         </Toolbar>
       </Container>
